@@ -12,8 +12,10 @@ import (
 	"strings"
 )
 
-func get_question(question string) ([]byte, error) {
-	url := fmt.Sprintf("https://api.stackexchange.com/2.2/search?intitle=%s&order=desc&sort=votes&site=stackoverflow", question)
+func get_question(words []string) ([]byte, error) {
+	tag := words[0]
+	question := strings.Join(words[1:], "+")
+	url := fmt.Sprintf("https://api.stackexchange.com/2.2/search/advanced?q=%s&tagged=%s&accepted=true&order=desc&sort=votes&site=stackoverflow", question, tag)
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err
@@ -74,8 +76,7 @@ func main() {
 	if len(os.Args) == 1 {
 		log.Fatal(errors.New("You have to pass a question!"))
 	}
-	question := strings.Join(os.Args[1:], "+")
-	bs, err := get_question(question)
+	bs, err := get_question(os.Args[1:])
 	if err != nil {
 		log.Fatal(err)
 	}
