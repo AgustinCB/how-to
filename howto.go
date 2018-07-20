@@ -71,6 +71,9 @@ func get_answer_body(bs []byte) (string, error) {
 }
 
 func main() {
+	if len(os.Args) == 1 {
+		log.Fatal(errors.New("You have to pass a question!"))
+	}
 	question := strings.Join(os.Args[1:], "+")
 	bs, err := get_question(question)
 	if err != nil {
